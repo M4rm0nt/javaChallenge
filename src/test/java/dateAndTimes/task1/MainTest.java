@@ -17,7 +17,7 @@ public class MainTest {
     @ParameterizedTest(name = "isLeap({0}) => {2}, Hinweis: {1}")
     @MethodSource("provideLeapYearTestData")
     void testIsLeap(int year, String hint, boolean expected) {
-        boolean result = Main.isLeap_JDK(year);
+        boolean result = Main.isLeap(year);
         TestReporter.logTestCase("Schaltjahr-Test für " + year, year, hint, expected, result);
         assertEquals(expected, result);
     }
