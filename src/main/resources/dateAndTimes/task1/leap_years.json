@@ -1,0 +1,27 @@
+[
+  {
+    "year": 1900,
+    "hint": "Säkulär",
+    "expected": false
+  },
+  {
+    "year": 2000,
+    "hint": "Säkular (aber 400er-Regel)",
+    "expected": true
+  },
+  {
+    "year": 2020,
+    "hint": "jedes 4. Jahr",
+    "expected": true
+  },
+  {
+    "year": 2021,
+    "hint": "nicht teilbar durch 4",
+    "expected": false
+  },
+  {
+    "year": 1996,
+    "hint": "normaler Schaltjahr",
+    "expected": true
+  }
+]
