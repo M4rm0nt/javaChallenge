@@ -3,6 +3,7 @@ package lsm.task2;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
 
@@ -11,48 +12,64 @@ public class Main {
         List<Integer> c1 = Arrays.asList(1,2,3,4,5);
         List<Integer> c2 = Arrays.asList(2,4,6,7);
 
-        Set<Integer> resultD = difference(c1,c2);
-        //  Set<Integer> resultD = difference(c2,c1);
-        System.out.println(resultD);
 
         // JDK implementierung
+        System.out.println("JDK:");
+        Set<Integer> resultD = difference(c1,c2);
         Set<Integer> resultU = union(c1,c2);
-        System.out.println(resultU);
-
         Set<Integer> resultI = intersection(c1,c2);
+        System.out.println(resultD);
+        System.out.println(resultU);
         System.out.println(resultI);
 
+        // JDK implementierung Stream-API
+        System.out.println("\nJDK STREAM-API:");
+        Set<Integer> resultDStream = differenceStream(c1,c2);
+        Set<Integer> resultUstream = unionStream(c1,c2);
+        System.out.println(resultDStream);
+        System.out.println(resultUstream);
+
+
         // Selbst implementiert
+        System.out.println("\nSELF IMPL:");
         Set<Integer> resultDNOJDK = differenceNOJDK(c1,c2);
-        //  Set<Integer> resultDNOJDK = differenceNOJDK(c2,c1);
-        System.out.println(resultDNOJDK);
-
         Set<Integer> resultUNOJDK = unionNOJDK(c1,c2);
-        System.out.println(resultUNOJDK);
-
         Set<Integer> resultINOJDK = intersectionNOJDK(c1,c2);
+        System.out.println(resultDNOJDK);
+        System.out.println(resultUNOJDK);
         System.out.println(resultINOJDK);
     }
 
-    // JDK implementierung von Differenzmengen
+    // JDK implementierung von Differenzmengen, Vereinigungsmenge, Schnittmenge
     static <T> Set<T> difference(final Collection<T> c1, final Collection<T> c2) {
         final Set<T> results = new HashSet<>(c1);
         results.removeAll(c2);
         return  results;
     }
 
-    // JDK implementierung von Vereinigungsmenge
     static <T> Set<T> union(final Collection<T> c1, final Collection<T> c2) {
         final Set<T> result = new HashSet<>(c1);
         result.addAll(c2);
         return  result;
     }
 
-    // JDK implementierung von Schnittmenge
     static <T> Set<T> intersection(final Collection<T> c1, final Collection<T> c2) {
         final Set<T> results = new HashSet<>(c1);
         results.retainAll(c2);
         return  results;
+    }
+
+    // JDK implementierung mit Stream-API
+    static <T> Set<T> differenceStream(final Collection<T> c1, final Collection<T> c2) {
+        return c1.stream().filter(e -> !c2.contains(e)).collect(Collectors.toSet());
+    }
+
+    static <T> Set<T> unionStream(final Collection<T> c1, final Collection<T> c2) {
+        return Stream.concat(c1.stream(), c2.stream()).collect(Collectors.toSet());
+    }
+
+    static <T> Set<T> intersectionStream(final Collection<T> c1, final Collection<T> c2) {
+        return c1.stream().filter(c2::contains).collect(Collectors.toSet());
     }
 
     //-------------------------------------------------

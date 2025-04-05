@@ -13,11 +13,7 @@ public class TestReporter {
     private static final String YELLOW = "\u001B[33m";
     private static final String BLUE = "\u001B[34m";
 
-    public static <T> void logTestCase(String testName,
-                                       Collection<T> input1,
-                                       Collection<T> input2,
-                                       Collection<T> expected,
-                                       Collection<T> actual) {
+    public static <T> void logTestCase(String testName, Collection<T> input1, Collection<T> input2, Collection<T> expected, Collection<T> actual) {
         long startTime = System.nanoTime();
 
         Set<T> expectedSet = new HashSet<>(expected);
@@ -39,17 +35,8 @@ public class TestReporter {
             System.out.println(GREEN + "✓ PASS" + RESET);
         } else {
             System.out.println(RED + "✗ FAIL" + RESET);
-            Set<T> missing = new HashSet<>(expected);
-            missing.removeAll(actual);
-            Set<T> extra = new HashSet<>(actual);
-            extra.removeAll(expected);
-            if (!missing.isEmpty()) {
-                System.out.printf("%sFehlende Elemente:%s %s%n", RED, RESET, missing);
-            }
-            if (!extra.isEmpty()) {
-                System.out.printf("%sZusätzliche Elemente:%s %s%n", RED, RESET, extra);
-            }
         }
+
         System.out.println("===========================================");
         System.out.println();
     }
