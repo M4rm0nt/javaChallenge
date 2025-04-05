@@ -1,9 +1,0 @@
-javac Main.java
-
-java Main Hallo Dietmar Darimont
-
-Einfaches Command-Line Tool
-Übergebene Parameter:
-1: Hallo
-2: Dietmar
-3: Darimont

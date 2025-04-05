@@ -36,6 +36,7 @@ public class Main {
         System.out.println(resultDNOJDK);
         System.out.println(resultUNOJDK);
         System.out.println(resultINOJDK);
+
     }
 
     // JDK implementierung von Differenzmengen, Vereinigungsmenge, Schnittmenge

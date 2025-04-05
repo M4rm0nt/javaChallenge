@@ -40,4 +40,32 @@ public class TestReporter {
         System.out.println("===========================================");
         System.out.println();
     }
+
+    public static <T> void logTestCase(String testName,
+                                       T input,
+                                       String hint,
+                                       boolean expected,
+                                       boolean actual) {
+        long startTime = System.nanoTime();
+        boolean passed = expected == actual;
+        double durationMs = (System.nanoTime() - startTime) / 1_000_000.0;
+
+        System.out.println("===========================================");
+        System.out.printf("%s🧪 %s%s%n", BLUE, testName, RESET);
+        System.out.println("-------------------------------------------");
+        System.out.printf("%s🔹 Jahr:%s %d%n", YELLOW, RESET, input);
+        System.out.printf("%s🔹 Hinweis:%s %s%n", YELLOW, RESET, hint);
+        System.out.printf("%s🔸 Erwartet:%s %s%n", GREEN, RESET, expected);
+        System.out.printf("%s🔸 Ergebnis:%s %s%n", GREEN, RESET, actual);
+        System.out.printf("%s⏱️ Laufzeit:%s %.3f ms%n", YELLOW, RESET, durationMs);
+
+        if (passed) {
+            System.out.println(GREEN + "✓ PASS" + RESET);
+        } else {
+            System.out.println(RED + "✗ FAIL" + RESET);
+        }
+
+        System.out.println("===========================================");
+        System.out.println();
+    }
 }

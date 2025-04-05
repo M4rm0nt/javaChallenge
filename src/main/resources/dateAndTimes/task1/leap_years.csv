@@ -1,0 +1,7 @@
+year,hint,expected
+
+1900,Säkulär,false
+2000,Säkular (aber 400er-Regel),true
+2020,jedes 4. Jahr,true
+2021,nicht teilbar durch 4,false
+1996,normaler Schaltjahr,true
