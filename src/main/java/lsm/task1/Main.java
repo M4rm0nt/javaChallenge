@@ -1,4 +1,4 @@
-package lsm;
+package lsm.task1;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -9,23 +9,8 @@ public class Main {
 
         List<String> list1 = Arrays.asList("Apfel", "Banane", "Kirsche", "Erdbeere");
         List<String> list2 = Arrays.asList("Banane", "Erdbeere", "Kiwi", "Pfirsich");
-/*
-        Set<String> commonElementsJDK = findCommon(list1, list2);
-        System.out.println("Gemeinsame Elemente: " + commonElementsJDK);
- */
         Set<String> commonElementsNOJDK = findCommonNoJdk(list1, list2);
         System.out.println("Gemeinsame Elemente: " + commonElementsNOJDK);
-/*
-        List<Integer> list3 = Arrays.asList(1, 2, 4, 7, 8);
-        List<Integer> list4 = Arrays.asList(2, 3, 7, 9);
-        Set<Integer> commonInteger = findCommon(list3, list4);
-        System.out.println("Gemeinsame Integer:" + commonInteger);
-
-        List<Boolean> list5 = Arrays.asList(true, false, false, true, true);
-        List<Boolean> list6 = Arrays.asList(true, false, false, true, true);
-        Set<Boolean> commonBoolean = findCommon(list5, list6);
-        System.out.println("Gemeinsame Integer:" + commonBoolean);
- */
     }
 
     static <T> Set<T> findCommon(final Collection<T> collection1, final Collection<T> collection2) {

@@ -1,4 +1,4 @@
-package lsm;
+package lsm.task1;
 
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,38 +15,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MainTest {
 
-    static class Person {
-        private final String name;
-
-        public Person(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Person person = (Person) o;
-            return Objects.equals(name, person.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(name);
-        }
-
-        @Override
-        public String toString() {
-            return "Person{" + name + "}";
-        }
-    }
-
     @ParameterizedTest(name = "[{index}] {0}")
     @MethodSource("provideTestCases")
     <T> void testFindCommonNOJDK(String testName, Collection<T> collection1, Collection<T> collection2, Set<T> expected) {
         Set<T> result = Main.findCommonNoJdk(collection1, collection2);
         TestReporter.logTestCase(
-                "🟠 NO-JDK: " + testName,
+                "NO-JDK: " + testName,
                 collection1,
                 collection2,
                 expected,
@@ -60,7 +34,7 @@ class MainTest {
     <T> void testFindCommonJDK(String testName, Collection<T> collection1, Collection<T> collection2, Set<T> expected) {
         Set<T> result = Main.findCommon(collection1, collection2);
         TestReporter.logTestCase(
-                "🔵 JDK: " + testName,
+                "JDK: " + testName,
                 collection1,
                 collection2,
                 expected,
@@ -158,4 +132,32 @@ class MainTest {
                 .mapToObj(i -> prefix + i)
                 .collect(Collectors.toList());
     }
+
+
+    static class Person {
+        private final String name;
+
+        public Person(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Person person = (Person) o;
+            return Objects.equals(name, person.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name);
+        }
+
+        @Override
+        public String toString() {
+            return "Person{" + name + "}";
+        }
+    }
+
 }
