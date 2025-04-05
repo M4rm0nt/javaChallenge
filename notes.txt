@@ -1,0 +1,4 @@
+CsvFileSource
+-   @CsvFileSource(resources = "...",
+    delimiterString = ";"
+    numLinesToSkip = 1
