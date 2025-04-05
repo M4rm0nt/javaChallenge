@@ -12,7 +12,6 @@ public class Main {
         List<Integer> c1 = Arrays.asList(1,2,3,4,5);
         List<Integer> c2 = Arrays.asList(2,4,6,7);
 
-
         // JDK implementierung
         System.out.println("JDK:");
         Set<Integer> resultD = difference(c1,c2);
@@ -28,7 +27,6 @@ public class Main {
         Set<Integer> resultUstream = unionStream(c1,c2);
         System.out.println(resultDStream);
         System.out.println(resultUstream);
-
 
         // Selbst implementiert
         System.out.println("\nSELF IMPL:");
@@ -82,6 +80,10 @@ public class Main {
         return removeDuplicatesInCollection(result);
     }
 
+    static <T> Set<T> removeDuplicatesInCollection(final Map<T, Long> results) {
+        return filterByCount(results, entry -> entry.getValue() == 1);
+    }
+
     //-------------------------------------------------
     //-------   Vereinigungsmenge von zwei Mengen
     //-------------------------------------------------
@@ -115,6 +117,11 @@ public class Main {
         }
     }
 
+    static <T> Set<T> removeUniquesInCollection(final Map<T, Long> results) {
+        return filterByCount(results, entry -> entry.getValue() >= 2);
+    }
+
+    // Wird von Difference und Intersection benutzt
     static <T> void markIfAlsoSecond(final Collection<T> collection, final Map<T, Long> results) {
         for(T element : collection) {
             results.computeIfPresent(element, (_, oldValue) -> oldValue + 1);
@@ -128,11 +135,4 @@ public class Main {
                 .collect(Collectors.toSet());
     }
 
-    static <T> Set<T> removeUniquesInCollection(final Map<T, Long> results) {
-        return filterByCount(results, entry -> entry.getValue() >= 2);
-    }
-
-    static <T> Set<T> removeDuplicatesInCollection(final Map<T, Long> results) {
-        return filterByCount(results, entry -> entry.getValue() == 1);
-    }
 }
