@@ -45,19 +45,21 @@ public class Main {
         for (T element : collection) {
             results.put(element, 1L);
         }
-        System.out.println(results);
     }
 
     static <T> void markIfAlsoInSecond(final Collection<T> collection, final Map<T, Long> results) {
         for (T element : collection) {
-            results.computeIfPresent(element, (_, value) -> value + 1);
+            results.computeIfPresent(element, (_, oldValue) -> oldValue + 1);
         }
-        System.out.println(results);
+    }
+
+    static <T> boolean isEntryRelevant(Map.Entry<T, Long> entry) {
+        return entry.getValue() >= 2;
     }
 
     static <T> Set<T> removeAllJustInOneCollection(final Map<T, Long> results) {
         return results.entrySet().stream()
-                .filter(entry -> entry.getValue() >= 2)
+                .filter(Main::isEntryRelevant)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
     }
