@@ -1,3 +1,4 @@
+startday, expected, ziel, info
 2019-07-21,2019-07-25,normale Anpassung, gleicher Monat
 2019-06-27,2019-07-25,normale Anpassung, nächster Monat
 2019-08-21,2019-08-23,Freitag, falls 25. am Wochenende

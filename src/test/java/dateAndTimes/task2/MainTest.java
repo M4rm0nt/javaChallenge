@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class MainTest {
 
     @ParameterizedTest(name = "adjustToPayday({0}) => {1}, {2}")
-    @CsvFileSource(resources = "/dateAndTimes/task2/payday_testcases.csv")
+    @CsvFileSource(resources = "/dateAndTimes/task2/payday_testcases.csv", numLinesToSkip = 1)
     void testAdjustInto(LocalDate startDay, LocalDate expected, String info) {
         Main adjuster = new Main();
         LocalDate result = LocalDate.from(adjuster.adjustInto(startDay));
