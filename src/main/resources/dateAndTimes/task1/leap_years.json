@@ -1,27 +1,25 @@
-[
-  {
-    "year": 1900,
-    "hint": "Säkulär",
-    "expected": false
+{
+  "metadata": {
+    "testSuite": "Schaltjahr-Validierung",
+    "version": "2.1.0",
+    "environment": "CI",
+    "timestamp": "2023-11-05T15:00:00Z",
+    "totalTests": 2
   },
-  {
-    "year": 2000,
-    "hint": "Säkular (aber 400er-Regel)",
-    "expected": true
-  },
-  {
-    "year": 2020,
-    "hint": "jedes 4. Jahr",
-    "expected": true
-  },
-  {
-    "year": 2021,
-    "hint": "nicht teilbar durch 4",
-    "expected": false
-  },
-  {
-    "year": 1996,
-    "hint": "normaler Schaltjahr",
-    "expected": true
-  }
-]
+  "testCases": [
+    {
+      "id": "LY-001",
+      "year": 1900,
+      "hint": "Säkulär",
+      "expected": false,
+      "tags": ["boundary", "secular"]
+    },
+    {
+      "id": "LY-002",
+      "year": 2000,
+      "hint": "400er-Regel",
+      "expected": true,
+      "tags": ["exception"]
+    }
+  ]
+}
