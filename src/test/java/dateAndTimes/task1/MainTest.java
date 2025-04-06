@@ -2,6 +2,8 @@ package dateAndTimes.task1;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -17,15 +19,47 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MainTest {
 
-    @ParameterizedTest(name = "[{0}] isLeap({1}) => {3}, Hinweis: {2}")
+    @BeforeAll
+    static void setup() {
+        TestSuiteMetadata suiteMetadata = loadMetadata();
+        TestReporter.logSuiteMetadata(
+                suiteMetadata.getTestSuite(),
+                suiteMetadata.getVersion(),
+                suiteMetadata.getEnvironment()
+        );
+    }
+
+    @AfterAll
+    static void tearDown() {
+        TestReporter.printSummary();
+    }
+
+    private static TestSuiteMetadata loadMetadata() {
+        try (InputStream is = MainTest.class.getResourceAsStream("/dateAndTimes/task1/leap_years.json")) {
+            if (is == null) {
+                throw new IllegalStateException("Testdatei nicht gefunden");
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            LeapYearTestWrapper wrapper = mapper.readValue(is, LeapYearTestWrapper.class);
+            return wrapper.getMetadata();
+        } catch (IOException e) {
+            throw new RuntimeException("Fehler beim Laden der Metadaten", e);
+        }
+    }
+
+    @ParameterizedTest
     @MethodSource("provideLeapYearTestData")
     void testIsLeap(String testId, int year, String hint, boolean expected, List<String> tags) {
-        TestReporter.logTestStart("Testfall: " + testId);
+        long start = System.nanoTime();
+        TestReporter.logTestStart(testId, tags);
+
         boolean result = Main.isLeap(year);
+        double duration = (System.nanoTime() - start) / 1_000_000.0;
 
-        TestReporter.logTestCaseDetails("Schaltjahr-Test", year, hint, expected, result, tags);
+        TestReporter.logTestCaseDetails(year, hint, expected, result, duration);
+        TestReporter.logFinalStatus(expected == result);
 
-        assertEquals(expected, result, String.format("Fehler in Testfall %s [Jahr: %d]", testId, year));
+        assertEquals(expected, result);
     }
 
     private static Stream<Arguments> provideLeapYearTestData() {
@@ -74,11 +108,11 @@ public class MainTest {
 
     private static void logMetadata(TestSuiteMetadata meta) {
         System.out.println("\n=== Testsuite Metadaten ===");
+        System.out.println("Erstellungsdatum: " + meta.getTimestamp());
         System.out.println("Name: " + meta.getTestSuite());
         System.out.println("Version: " + meta.getVersion());
         System.out.println("Umgebung: " + meta.getEnvironment());
         System.out.println("Erwartete Tests: " + meta.getTotalTests());
-        System.out.println("Erstellungsdatum: " + meta.getTimestamp() + "\n");
     }
 
     private static void validateTestCount(LeapYearTestWrapper wrapper) {
@@ -116,7 +150,6 @@ public class MainTest {
             this.testCases = testCases;
         }
     }
-
     private static class TestSuiteMetadata {
         private String testSuite;
         private String version;
@@ -165,7 +198,6 @@ public class MainTest {
             this.totalTests = totalTests;
         }
     }
-
     private static class LeapYearTestCase {
         private String id;
         private int year;
