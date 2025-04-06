@@ -2,7 +2,7 @@ package bbm.task1;
 
 public class Main {
     public static void main(String[] args) {
-        BinaryTreeNode<String> root = ExampleTrees.createExampleTree();
+        BinaryTreeNode<String> root = BinaryTreeSupplyService.createExampleTree();
     /*
         d4
       /    \

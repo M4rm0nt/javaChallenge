@@ -1,6 +1,6 @@
 package bbm.task1;
 
-public class ExampleTrees {
+public class BinaryTreeSupplyService {
     public static BinaryTreeNode<String> createExampleTree() {
         BinaryTreeNode<String> d4 = new BinaryTreeNode<>("d4");
         d4.left = new BinaryTreeNode<>("b2");
