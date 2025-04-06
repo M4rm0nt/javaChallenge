@@ -6,11 +6,25 @@ import java.util.function.Consumer;
 
 public class TreeTraversal {
 
+    // INORDER
+    public static <T> List<T> toListInorder(BinaryTreeNode<T> root) {
+        List<T> result = new ArrayList<>();
+        inorder(root, result::add);
+        return result;
+    }
+
     public static <T> void inorder(BinaryTreeNode<T> node, Consumer<T> action) {
         if (node == null) return;
         inorder(node.left, action);
         action.accept(node.item);
         inorder(node.right, action);
+    }
+
+    // PREORDER
+    public static <T> List<T> toListPreorder(BinaryTreeNode<T> root) {
+        List<T> result = new ArrayList<>();
+        preorder(root, result::add);
+        return result;
     }
 
     public static <T> void preorder(BinaryTreeNode<T> node, Consumer<T> action) {
@@ -20,23 +34,12 @@ public class TreeTraversal {
         preorder(node.right, action);
     }
 
+    // POSTORDER
     public static <T> void postorder(BinaryTreeNode<T> node, Consumer<T> action) {
         if (node == null) return;
         postorder(node.left, action);
         postorder(node.right, action);
         action.accept(node.item);
-    }
-
-    public static <T> List<T> toListInorder(BinaryTreeNode<T> root) {
-        List<T> result = new ArrayList<>();
-        inorder(root, result::add);
-        return result;
-    }
-
-    public static <T> List<T> toListPreorder(BinaryTreeNode<T> root) {
-        List<T> result = new ArrayList<>();
-        preorder(root, result::add);
-        return result;
     }
 
     public static <T> List<T> toListPostorder(BinaryTreeNode<T> root) {

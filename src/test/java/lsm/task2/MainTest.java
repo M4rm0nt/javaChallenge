@@ -16,7 +16,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MainTest {
 
     // ----------- Generische Testmethode für alle Operationen -----------
-    private <T> void testOperation(String testName, BiFunction<Collection<T>, Collection<T>, Set<T>> operation, Collection<T> c1, Collection<T> c2, Set<T> expected) {
+    private <T> void testOperation(
+            String testName,
+            Collection<T> c1,
+            Collection<T> c2,
+            BiFunction<Collection<T>, Collection<T>, Set<T>> operation,
+            Set<T> expected
+            ) {
         Set<T> result = operation.apply(c1, c2);
         logTestResult(testName, c1, c2, expected, result);
 
@@ -32,57 +38,57 @@ public class MainTest {
     @ParameterizedTest(name = "[{index}] {0} (Difference)")
     @MethodSource("provideDifferenceTestCases")
     <T> void difference(String testName, Collection<T> c1, Collection<T> c2, Set<T> expected) {
-        testOperation(testName, Main::difference, c1, c2, expected);
+        testOperation(testName, c1, c2, Main::difference, expected);
     }
 
     @ParameterizedTest(name = "[{index}] {0} (DifferenceStream)")
     @MethodSource("provideDifferenceTestCases")
     <T> void differenceStream(String testName, Collection<T> c1, Collection<T> c2, Set<T> expected) {
-        testOperation(testName, Main::differenceStream, c1, c2, expected);
+        testOperation(testName, c1, c2, Main::differenceStream, expected);
     }
 
     @ParameterizedTest(name = "[{index}] {0} (DifferenceNOJDK)")
     @MethodSource("provideDifferenceTestCases")
     <T> void differenceNOJDK(String testName, Collection<T> c1, Collection<T> c2, Set<T> expected) {
-        testOperation(testName, Main::differenceNOJDK, c1, c2, expected);
+        testOperation(testName, c1, c2, Main::differenceNOJDK, expected);
     }
 
     // ----------- Union Tests -----------
     @ParameterizedTest(name = "[{index}] {0} (Union)")
     @MethodSource("provideUnionTestCases")
     <T> void union(String testName, Collection<T> c1, Collection<T> c2, Set<T> expected) {
-        testOperation(testName, Main::union, c1, c2, expected);
+        testOperation(testName, c1, c2, Main::union, expected);
     }
 
     @ParameterizedTest(name = "[{index}] {0} (UnionStream)")
     @MethodSource("provideUnionTestCases")
     <T> void unionStream(String testName, Collection<T> c1, Collection<T> c2, Set<T> expected) {
-        testOperation(testName, Main::unionStream, c1, c2, expected);
+        testOperation(testName, c1, c2, Main::unionStream, expected);
     }
 
     @ParameterizedTest(name = "[{index}] {0} (UnionNOJDK)")
     @MethodSource("provideUnionTestCases")
     <T> void unionNOJDK(String testName, Collection<T> c1, Collection<T> c2, Set<T> expected) {
-        testOperation(testName, Main::unionNOJDK, c1, c2, expected);
+        testOperation(testName, c1, c2, Main::unionNOJDK, expected);
     }
 
     // ----------- Intersection Tests -----------
     @ParameterizedTest(name = "[{index}] {0} (Intersection)")
     @MethodSource("provideIntersectionTestCases")
     <T> void intersection(String testName, Collection<T> c1, Collection<T> c2, Set<T> expected) {
-        testOperation(testName, Main::intersection, c1, c2, expected);
+        testOperation(testName, c1, c2, Main::intersection, expected);
     }
 
     @ParameterizedTest(name = "[{index}] {0} (IntersectionStream)")
     @MethodSource("provideIntersectionTestCases")
     <T> void intersectionStream(String testName, Collection<T> c1, Collection<T> c2, Set<T> expected) {
-        testOperation(testName, Main::intersectionStream, c1, c2, expected);
+        testOperation(testName, c1, c2, Main::intersectionStream, expected);
     }
 
     @ParameterizedTest(name = "[{index}] {0} (IntersectionNOJDK)")
     @MethodSource("provideIntersectionTestCases")
     <T> void intersectionNOJDK(String testName, Collection<T> c1, Collection<T> c2, Set<T> expected) {
-        testOperation(testName, Main::intersectionNOJDK, c1, c2, expected);
+        testOperation(testName, c1, c2, Main::intersectionNOJDK, expected);
     }
 
     // ----------- Hilfsmethode für TestReporter -----------
