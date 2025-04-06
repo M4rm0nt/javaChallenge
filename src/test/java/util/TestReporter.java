@@ -1,7 +1,14 @@
 package util;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class TestReporter {
 
@@ -13,47 +20,88 @@ public class TestReporter {
     private static final String CYAN = "\u001B[36m";
     private static final String PURPLE = "\u001B[35m";
 
-    public static void logTestStart(String testName) {
-        System.out.println("\n" + CYAN + "➤➤➤ " + testName + RESET);
+    // Statistik Variablen
+    private static final AtomicInteger totalTests = new AtomicInteger(0);
+    private static final AtomicInteger passedTests = new AtomicInteger(0);
+    private static final AtomicLong totalDuration = new AtomicLong(0);
+    private static final LocalDateTime startTime = LocalDateTime.now();
+
+    public static void logTestStart(String testId, List<String> tags) {
+        System.out.println(CYAN + "\n➤➤➤ TESTFALL " + testId + " " + formatTags(tags) + RESET);
     }
 
-    public static void logTestCaseDetails(String testName, int year, String hint, boolean expected, boolean actual, List<String> tags) {
-        long startTime = System.nanoTime();
-        boolean passed = expected == actual;
-        double durationMs = (System.nanoTime() - startTime) / 1_000_000.0;
+    public static void logTestCaseDetails(int year, String hint, boolean expected, boolean actual, double durationMs) {
+        MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
+        long memUsage = memoryBean.getHeapMemoryUsage().getUsed() / 1024 / 1024;
 
         System.out.println("═══════════════════════════════════════════");
-        System.out.printf("%s%s%s%n", BLUE + "⚙️ Testname:", RESET, testName);
-        System.out.printf("%s%s%d%n", YELLOW + "🔹 Jahr:", RESET, year);
-        System.out.printf("%s%s%s%n", YELLOW + "🔹 Hinweis:", RESET, hint);
-        System.out.printf("%s%s%b%n", GREEN + "✅ Erwartet:", RESET, expected);
-        System.out.printf("%s%s%b%n", GREEN + "🔄 Ergebnis:", RESET, actual);
-        System.out.printf("%s%s%.3f ms%n", YELLOW + "⏱️ Laufzeit:", RESET, durationMs);
-        System.out.printf("%s%s%s%n%n", passed ? GREEN + "🟢 Status:" : RED + "🔴 Status:", RESET, passed ? "PASS" : "FAIL");
-        System.out.printf("%s%s%s%n", PURPLE + "🏷️ Tags:", RESET, formatTags(tags));
+        System.out.printf("%s%-18s%s%n", BLUE + "⚙️ Eingabeparameter:", RESET, "");
+        System.out.printf("   - Jahr: %s%d%s%n", YELLOW, year, RESET);
+        System.out.printf("   - Hinweis: %s\"%s\"%s%n", YELLOW, hint, RESET);
+        System.out.printf("%s%-18s%s%b%n", GREEN + "✅ Erwartet:", RESET, expected);
+        System.out.printf("%s%-18s%s%b%n", GREEN + "🔄 Ergebnis:", RESET, actual);
+        System.out.printf("%s%-18s%s%.2f ms%n", YELLOW + "⏱️ Laufzeit:", RESET, durationMs);
+        System.out.printf("%s%-18s%s%d MB%n", BLUE + "📊 Ressourcen:", RESET, memUsage);
+        logSystemInfo();
     }
 
-    public static void logMetadata(String testSuite, String version, String environment, int testCount) {
-        System.out.println(PURPLE + "\n████████████ METADATEN ████████████" + RESET);
-        System.out.printf("%s%-15s%s%s%n", CYAN + "📦 Testsuite:", RESET, testSuite);
-        System.out.printf("%s%-15s%s%s%n", CYAN + "🏷️ Version:", RESET, version);
-        System.out.printf("%s%-15s%s%s%n", CYAN + "🌐 Umgebung:", RESET, environment);
-        System.out.printf("%s%-15s%s%d%n%n", CYAN + "🧪 Testfälle:", RESET, testCount);
+    public static void logFinalStatus(boolean passed) {
+        if (passed) {
+            passedTests.incrementAndGet();
+            System.out.printf("%s%-18s%s%n%n", GREEN + "🟢 STATUS:", RESET, "PASS");
+        } else {
+            System.out.printf("%s%-18s%s%n%n", RED + "🔴 STATUS:", RESET, "FAIL");
+        }
+        totalTests.incrementAndGet();
+    }
+
+    public static void printSummary() {
+        Duration duration = Duration.between(startTime, LocalDateTime.now());
+        double avgDuration = totalTests.get() > 0 ?
+                totalDuration.get() / (double) totalTests.get() : 0;
+
+        System.out.println(PURPLE + "\n████████████ ZUSAMMENFASSUNG ████████████" + RESET);
+        System.out.printf("%s%d/%d Tests erfolgreisch%s | ",
+                GREEN, passedTests.get(), totalTests.get(), RESET);
+        System.out.printf("%s⏱️ Gesamtzeit: %d s | Ø: %.2f ms%s%n",
+                YELLOW, duration.getSeconds(), avgDuration, RESET);
+        System.out.printf("%s🗓️ Testlauf gestartet: %s%s%n",
+                CYAN, startTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), RESET);
+    }
+
+    private static void logSystemInfo() {
+        Properties props = System.getProperties();
+        System.out.printf("%s%-18s%s%n", CYAN + "📂 Umgebung:", RESET,
+                String.format("JDK %s | %s %s | %s",
+                        props.getProperty("java.version"),
+                        props.getProperty("os.name"),
+                        props.getProperty("os.version"),
+                        props.getProperty("os.arch")
+                ));
+    }
+
+    public static void logSuiteMetadata(String testSuite, String version, String environment) {
+        System.out.println(PURPLE + "\n████████████ TESTSUITE: " + testSuite.toUpperCase() + " ████████████" + RESET);
+        System.out.printf("%s%-12s%s%s%n",
+                CYAN + "📅 Erstellt am:" + RESET,
+                "",  // Leerstring als Trennzeichen
+                LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        System.out.printf("%s%-12s%s%s%n",
+                CYAN + "🏷️ Version:" + RESET,
+                "",  // Leerstring als Trennzeichen
+                version);
+        System.out.printf("%s%-12s%s%s%n%n",
+                CYAN + "🌍 Umgebung:" + RESET,
+                "",  // Leerstring als Trennzeichen
+                environment);
     }
 
     private static String formatTags(List<String> tags) {
-        if (tags == null || tags.isEmpty()) {
-            return CYAN + "Keine Tags" + RESET;
-        }
-        return String.join(", ", tags.stream().map(t -> PURPLE + "#" + t + RESET).toList());
-    }
-
-    public static void logTestFailure(String testId, String expected, String actual) {
-        System.out.printf("%s[FAIL]%s Test %s - Erwartet: %s, Bekommen: %s%n", RED, RESET, testId, GREEN + expected + RESET, RED + actual + RESET);
-    }
-
-    public static void logTestSuccess(String testId) {
-        System.out.printf("%s[PASS]%s Test %s%n", GREEN, RESET, CYAN + testId + RESET);
+        if (tags == null || tags.isEmpty()) return "";
+        return tags.stream()
+                .map(t -> PURPLE + "#" + t + RESET)
+                .reduce((a, b) -> a + ", " + b)
+                .orElse("");
     }
 
     public static <T> void logTestCase(String testName, Collection<T> input1, Collection<T> input2, Collection<T> expected, Collection<T> actual) {

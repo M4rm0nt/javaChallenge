@@ -20,7 +20,6 @@ public class MainTest {
         Set<T> result = operation.apply(c1, c2);
         logTestResult(testName, c1, c2, expected, result);
 
-        // Detaillierte Fehleranalyse
         Set<T> missing = new HashSet<>(expected);
         missing.removeAll(result);
         Set<T> extra = new HashSet<>(result);
