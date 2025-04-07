@@ -12,13 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class MainTest {
 
     @ParameterizedTest(name = "[{index}] {0}")
-    @MethodSource("bbm.task1.TestDataFactory#provideTraversalTestCases")
+    @MethodSource("bbm.task1.TestCaseProvider#provideTraversalTestCases")
     void testTreeTraversal(TraversalTestCase testCase) {
-        Supplier<List<String>> traversalSupplier = TraversalFactory.getTraversal(testCase.getTraversalType().toLowerCase());
+        Supplier<List<String>> traversalSupplier = TraversalFactory.getTraversal(testCase.traversalType().toLowerCase());
         List<String> result = traversalSupplier.get();
 
-        TestReporter.logTestCase("Baum-Traversierungstest", testCase.getTraversalType(), testCase.getDescription(), testCase.getExpected(), result);
+        TestReporter.logTestCase("Baum-Traversierungstest", testCase.traversalType(), testCase.description(), testCase.expected(), result);
 
-        assertEquals(testCase.getExpected(), result);
+        assertEquals(testCase.expected(), result);
     }
 }

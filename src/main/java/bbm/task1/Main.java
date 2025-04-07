@@ -2,7 +2,6 @@ package bbm.task1;
 
 public class Main {
     public static void main(String[] args) {
-        BinaryTreeNode<String> root = BinaryTreeSupplyService.createExampleTree();
     /*
         d4
       /    \
@@ -22,9 +21,6 @@ d4
   f6
     → g7
          */
-        TreeTraversal.inorder(root, System.out::println);
-
-        System.out.println("\n");
         System.out.println("Preorder Traversal:");
         /*
 d4 (Start)
@@ -37,9 +33,6 @@ d4 (Start)
     ├── e5
     └── g7
          */
-        TreeTraversal.preorder(root, System.out::println);
-
-        System.out.println("\n");
         System.out.println("Postorder Traversal:");
         /*
      a1 → c3
@@ -48,7 +41,6 @@ e5 → g7
   f6
     d4 (Ende)
         */
-        TreeTraversal.postorder(root, System.out::println);
 
     }
 }

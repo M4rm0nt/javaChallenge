@@ -2,49 +2,82 @@ package bbm.task1;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.Stack;
 
 public class TreeTraversal {
 
-    // INORDER
+    /**
+     * Iterative Inorder-Traversierung
+     */
     public static <T> List<T> toListInorder(BinaryTreeNode<T> root) {
         List<T> result = new ArrayList<>();
-        inorder(root, result::add);
+        Stack<BinaryTreeNode<T>> stack = new Stack<>();
+        BinaryTreeNode<T> current = root;
+
+        while (current != null || !stack.isEmpty()) {
+            while (current != null) {
+                stack.push(current);
+                current = current.getLeft();
+            }
+            current = stack.pop();
+            result.add(current.getValue());
+            current = current.getRight();
+        }
         return result;
     }
 
-    public static <T> void inorder(BinaryTreeNode<T> node, Consumer<T> action) {
-        if (node == null) return;
-        inorder(node.left, action);
-        action.accept(node.item);
-        inorder(node.right, action);
-    }
-
-    // PREORDER
+    /**
+     * Iterative Preorder-Traversierung
+     */
     public static <T> List<T> toListPreorder(BinaryTreeNode<T> root) {
         List<T> result = new ArrayList<>();
-        preorder(root, result::add);
+        if (root == null) return result;
+
+        Stack<BinaryTreeNode<T>> stack = new Stack<>();
+        stack.push(root);
+
+        while (!stack.isEmpty()) {
+            BinaryTreeNode<T> current = stack.pop();
+            result.add(current.getValue());
+
+            if (current.getRight() != null) {
+                stack.push(current.getRight());
+            }
+            if (current.getLeft() != null) {
+                stack.push(current.getLeft());
+            }
+        }
         return result;
     }
 
-    public static <T> void preorder(BinaryTreeNode<T> node, Consumer<T> action) {
-        if (node == null) return;
-        action.accept(node.item);
-        preorder(node.left, action);
-        preorder(node.right, action);
-    }
-
-    // POSTORDER
-    public static <T> void postorder(BinaryTreeNode<T> node, Consumer<T> action) {
-        if (node == null) return;
-        postorder(node.left, action);
-        postorder(node.right, action);
-        action.accept(node.item);
-    }
-
+    /**
+     * Iterative Postorder-Traversierung (mit zwei Stacks)
+     */
+    /**
+     * Iterative Postorder-Traversierung (mit einem Stack)
+     */
     public static <T> List<T> toListPostorder(BinaryTreeNode<T> root) {
         List<T> result = new ArrayList<>();
-        postorder(root, result::add);
+        if (root == null) return result;
+
+        Stack<BinaryTreeNode<T>> stack = new Stack<>();
+        BinaryTreeNode<T> current = root;
+        BinaryTreeNode<T> lastVisited = null;
+
+        while (!stack.isEmpty() || current != null) {
+            if (current != null) {
+                stack.push(current);
+                current = current.getLeft();
+            } else {
+                BinaryTreeNode<T> peekNode = stack.peek();
+                if (peekNode.getRight() != null && lastVisited != peekNode.getRight()) {
+                    current = peekNode.getRight();
+                } else {
+                    result.add(peekNode.getValue());
+                    lastVisited = stack.pop();
+                }
+            }
+        }
         return result;
     }
 }

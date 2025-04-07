@@ -6,8 +6,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class TraversalFactory {
-
-    private static final BinaryTreeNode<String> tree = BinaryTreeSupplyService.createExampleTree();
+    private static final BinaryTreeNode<String> tree = TreeBuilder.buildExampleTree();
 
     private static final Map<String, Supplier<List<String>>> traversalMap = new HashMap<>();
 
