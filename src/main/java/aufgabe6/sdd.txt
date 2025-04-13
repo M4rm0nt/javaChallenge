@@ -1,0 +1,45 @@
+@startuml
+actor Benutzer
+participant Main
+participant "List<GeoPos>" as GeoList
+participant GeoCalculator
+participant "GeoPos[]" as GeoArray
+
+Benutzer -> Main : Programm starten
+Main -> Main : positions initialisieren\n(5 GeoPos-Objekte)
+Main -> Main : printPositions(positions)
+
+Main -> Main : calculateFlight(positions)
+activate Main
+
+Main -> GeoList : new ArrayList<>(List.of(geoPositions))
+Main -> GeoArray : new GeoPos[geoPositions.length]
+
+Main -> GeoList : getFirst()
+GeoList --> Main : currentPos (München)
+Main -> GeoArray : flightPositions[0] = currentPos
+Main -> GeoList : removeFirst()
+
+loop while !remainingPositions.isEmpty()
+    Main -> Main : minDistance = Double.MAX_VALUE
+    loop for each position in GeoList
+        Main -> GeoList : get(i)
+        GeoList --> Main : pos
+        Main -> GeoCalculator : getDistance(currentPos, pos)
+        GeoCalculator --> Main : distance
+        alt distance < minDistance
+            Main -> Main : minDistance = distance\nnearestPos = pos\nnearestIndex = i
+        end
+    end
+
+    Main -> GeoArray : flightPositions[index++] = nearestPos
+    Main -> Main : currentPos = nearestPos
+    Main -> GeoList : remove(nearestIndex)
+end
+
+Main --> Main : return flightPositions
+deactivate Main
+
+Main -> Main : printPositions(optimizedRoute)
+Benutzer <-- Main : Ausgabe der optimierten Route
+@enduml
