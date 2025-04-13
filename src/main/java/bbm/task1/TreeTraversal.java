@@ -6,29 +6,52 @@ import java.util.Stack;
 
 public class TreeTraversal {
 
-    /**
-     * Iterative Inorder-Traversierung
-     */
+    /*
     public static <T> List<T> toListInorder(BinaryTreeNode<T> root) {
+
         List<T> result = new ArrayList<>();
         Stack<BinaryTreeNode<T>> stack = new Stack<>();
-        BinaryTreeNode<T> current = root;
+        BinaryTreeNode<T> node = root;
 
-        while (current != null || !stack.isEmpty()) {
-            while (current != null) {
-                stack.push(current);
-                current = current.getLeft();
+        while (node != null || !stack.isEmpty()) {
+            while (node != null) {
+                stack.push(node);
+                node = node.getLeft();
             }
-            current = stack.pop();
-            result.add(current.getValue());
-            current = current.getRight();
+            node = stack.pop();
+            result.add(node.getValue());
+            node = node.getRight();
         }
         return result;
     }
-
-    /**
-     * Iterative Preorder-Traversierung
      */
+
+    public static <T> List<T> toListInorder(BinaryTreeNode<T> root) {
+        List<T> result = new ArrayList<>();
+        inorderRecursive(root, result);
+        return result;
+    }
+
+    private static <T> void inorderRecursive(BinaryTreeNode<T> node, List<T> result) {
+        if (node == null) {
+            return;
+        }
+        inorderRecursive(node.getLeft(), result);
+        result.add(node.getValue());
+        inorderRecursive(node.getRight(), result);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     public static <T> List<T> toListPreorder(BinaryTreeNode<T> root) {
         List<T> result = new ArrayList<>();
         if (root == null) return result;
@@ -50,12 +73,6 @@ public class TreeTraversal {
         return result;
     }
 
-    /**
-     * Iterative Postorder-Traversierung (mit zwei Stacks)
-     */
-    /**
-     * Iterative Postorder-Traversierung (mit einem Stack)
-     */
     public static <T> List<T> toListPostorder(BinaryTreeNode<T> root) {
         List<T> result = new ArrayList<>();
         if (root == null) return result;

@@ -2,32 +2,17 @@ package bbm.task1;
 
 import java.util.Stack;
 
-/**
- * Eine Utility-Klasse zum Bauen von Binärbäumen mit einer Fluent-API.
- */
 public class TreeBuilder<T> {
     private BinaryTreeNode<T> root;
     private BinaryTreeNode<T> currentNode;
     private final Stack<BinaryTreeNode<T>> parentStack = new Stack<>();
 
-    /**
-     * Erstellt einen neuen Baum mit der gegebenen Wurzel.
-     *
-     * @param value Der Wert des Wurzelknotens
-     * @return this für Methoden-Chaining
-     */
     public TreeBuilder<T> root(T value) {
         root = new BinaryTreeNode<>(value);
         currentNode = root;
         return this;
     }
 
-    /**
-     * Fügt einen linken Kindknoten zum aktuellen Knoten hinzu.
-     *
-     * @param value Der Wert des linken Kindknotens
-     * @return this für Methoden-Chaining
-     */
     public TreeBuilder<T> left(T value) {
         BinaryTreeNode<T> node = new BinaryTreeNode<>(value);
         currentNode.setLeft(node);
@@ -36,12 +21,6 @@ public class TreeBuilder<T> {
         return this;
     }
 
-    /**
-     * Fügt einen rechten Kindknoten zum aktuellen Knoten hinzu.
-     *
-     * @param value Der Wert des rechten Kindknotens
-     * @return this für Methoden-Chaining
-     */
     public TreeBuilder<T> right(T value) {
         BinaryTreeNode<T> node = new BinaryTreeNode<>(value);
         currentNode.setRight(node);
@@ -50,11 +29,6 @@ public class TreeBuilder<T> {
         return this;
     }
 
-    /**
-     * Bewegt sich im Baum eine Ebene nach oben zum Elternknoten.
-     *
-     * @return this für Methoden-Chaining
-     */
     public TreeBuilder<T> up() {
         if (!parentStack.isEmpty()) {
             currentNode = parentStack.pop();
@@ -62,11 +36,6 @@ public class TreeBuilder<T> {
         return this;
     }
 
-    /**
-     * Beendet den Bauprozess und gibt den konstruierten Baum zurück.
-     *
-     * @return Der Wurzelknoten des konstruierten Baums
-     */
     public BinaryTreeNode<T> build() {
         return root;
     }
@@ -95,3 +64,4 @@ public class TreeBuilder<T> {
                 .build();
     }
 }
+

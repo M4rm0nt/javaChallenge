@@ -1,44 +1,97 @@
 package test;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 
 public class Main {
+
     public static void main(String[] args) {
-        if (args.length != 2) {
-            System.out.println("Bitte geben Sie den Wochentag und das Datum ein.");
-            System.out.println("Beispiel: java Main freitag 05.05.2005");
-            return;
+
+      System.out.println(createErrorResponse("Hallo Welt!", 200));
+    }
+
+
+    static class HttpHeader {
+        private String name;
+        private String value;
+
+        public HttpHeader(String name, String value) {
+            this.name = name;
+            this.value = value;
         }
 
-        String inputDay = args[0].toLowerCase();
-        String inputDate = args[1];
-
-        List<String> validDays = Arrays.asList("montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag");
-
-        if (!validDays.contains(inputDay)) {
-            System.out.println("Fehler: '" + args[0] + "' ist kein gültiger Wochentag.");
-            System.out.println("Gültige Wochentage sind: Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag, Sonntag");
-            return;
+        public String getName() {
+            return name;
         }
 
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-            LocalDate date = LocalDate.parse(inputDate, formatter);
+        public String getValue() {
+            return value;
+        }
 
-            String actualDay = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.GERMAN).toLowerCase();
-
-            if (inputDay.equals(actualDay)) {
-                System.out.println("Ja, der " + inputDate + " war ein " + actualDay + ".");
-            } else {
-                System.out.println("Nein, der " + inputDate + " war kein " + inputDay + ", sondern ein " + actualDay + ".");
-            }
-        } catch (Exception e) {
-            System.out.println("Fehler beim Parsen des Datums. Bitte verwenden Sie das Format dd.MM.yyyy");
+        @Override
+        public String toString() {
+            return name + ": " + value;
         }
     }
+
+    static class HttpResponse {
+        private int statusCode;
+        private HttpHeader[] headers;
+        private String body;
+
+        // Konstruktor gemäß Klassendiagramm
+        public HttpResponse(int statusCode) {
+            this.statusCode = statusCode;
+            this.headers = new HttpHeader[0]; // Initial leer
+            this.body = "";
+        }
+
+        // Methode zum Hinzufügen eines Headers
+        public void addHeader(String name, String value) {
+            HttpHeader[] newHeaders = new HttpHeader[headers.length + 1];
+            System.arraycopy(headers, 0, newHeaders, 0, headers.length);
+
+            newHeaders[headers.length] = new HttpHeader(name, value);
+            this.headers = newHeaders;
+        }
+
+        // Methode zum Setzen des Bodys
+        public void setBody(String content) {
+            this.body = content;
+        }
+
+        // Getter für statusCode
+        public int getStatusCode() {
+            return statusCode;
+        }
+
+        // Getter für headers
+        public HttpHeader[] getHeaders() {
+            return headers;
+        }
+
+        // Getter für body
+        public String getBody() {
+            return body;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder result = new StringBuilder("HTTP < " + statusCode + " >\n");
+            for (HttpHeader header : headers) {
+                result.append(header.toString()).append("\n");
+            }
+            result.append("< Response Body: ").append(body).append((" >"));
+            return result.toString();
+        }
+    }
+
+    public static HttpResponse createErrorResponse(String nachricht, int statusCode) {
+        HttpResponse response = new HttpResponse(statusCode);
+        response.addHeader("Content-Type", "text/plain");
+        response.addHeader("Content-Length", "< " + nachricht.length() + " >");
+        response.setBody(nachricht);
+        return response;
+    }
+
+
 }
+
