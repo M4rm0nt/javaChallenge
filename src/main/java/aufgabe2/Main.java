@@ -77,7 +77,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Abfahrt[] naechsteAbfahrten = getNaechsteAbfahrt(100, 3);
+        Abfahrt[] naechsteAbfahrten = getNaechsteAbfahrt(101, 3);
         System.out.println(Arrays.toString(naechsteAbfahrten));
     }
 
@@ -93,11 +93,11 @@ public class Main {
         int startIndex = -1;
 
         for (int i = 0; i < alleAbfahrten.length; i++) {
-            if (alleAbfahrten[i].getAbfahrtsZeit() == null || alleAbfahrten[i].getHaltestellenId() <= 0) {
+            if (alleAbfahrten[i].getAbfahrtsZeit() == null || alleAbfahrten[i].getHaltestellenId() == 0) {
                 continue;
             }
             int diff = fahrplanService.compareDate(alleAbfahrten[i].getAbfahrtsZeit(), now);
-            if (diff >= 0 && alleAbfahrten[i].getHaltestellenId() == haltestellenId) {
+            if (diff >= 0 && alleAbfahrten[i].getHaltestellenId() >= haltestellenId) {
                 startIndex = i;
                 break;
             }
