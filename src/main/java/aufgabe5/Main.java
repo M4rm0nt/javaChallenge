@@ -8,6 +8,7 @@ public class Main {
     private static final double FAKTOR_RECHNUNG = 1.2;
 
     public static void main(String[] args) {
+
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Bitte geben Sie den Säuregehalt der Trauben ein: ");

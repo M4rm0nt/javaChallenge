@@ -1,0 +1,42 @@
+@startuml
+
+actor Benutzer
+participant "Main" as Main
+participant "Scanner" as Scanner
+
+Benutzer -> Main : startet Programm
+
+Main -> Scanner : new Scanner(System.in)
+
+Main -> Benutzer : "Bitte geben Sie den Säuregehalt der Trauben ein: "
+
+Benutzer -> Main : saeuregehalt
+
+alt saeuregehalt > SAEURE_GRENZWERT
+Main -> Benutzer : "Säuregehalt zu hoch"
+
+else saeuregehalt <= SAEURE_GRENZWERT
+Main -> Benutzer : "Bitte geben Sie den Oechslegrad ein: "
+
+Benutzer -> Main : oechslegrad
+
+    Main -> Main : berechneReifegrad(oechslegrad)
+
+    activate Main
+    Main --> Main : reifegrad
+
+    deactivate Main
+    alt reifegrad >= 100
+        Main -> Benutzer : "hoher Reifegrad"
+    else reifegrad >= 80
+        Main -> Benutzer : "mittlerer Reifegrad"
+    else reifegrad >= 70
+        Main -> Benutzer : "niedriger Reifegrad"
+    else
+        Main -> Benutzer : "Reifegrad zu niedrig"
+    end
+end
+
+Main -> Scanner : close()
+
+@enduml
