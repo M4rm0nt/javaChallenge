@@ -28,11 +28,12 @@ public class Main {
             return new GeoPos[0];
         }
 
+        GeoPos[] result = new GeoPos[geoPositions.length];
+
         List<GeoPos> remainingPositions = new ArrayList<>(List.of(geoPositions));
-        GeoPos[] flightPositions = new GeoPos[geoPositions.length];
 
         GeoPos currentPos = remainingPositions.getFirst();
-        flightPositions[0] = currentPos;
+        result[0] = currentPos;
         remainingPositions.removeFirst();
 
         int index = 1;
@@ -54,13 +55,13 @@ public class Main {
             }
 
             if (nearestPos != null) {
-                flightPositions[index++] = nearestPos;
+                result[index++] = nearestPos;
                 currentPos = nearestPos;
                 remainingPositions.remove(nearestIndex);
             }
         }
 
-        return flightPositions;
+        return result;
     }
 
     private static void printPositions(GeoPos[] positions) {
