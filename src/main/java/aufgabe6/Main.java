@@ -24,10 +24,13 @@ public class Main {
     }
 
     public static GeoPos[] calculateFlight(GeoPos[] geoPositions) {
+
+        // GeoPos [ 0, 1, 2, 3, 4 ]
         if (geoPositions == null || geoPositions.length == 0) {
             return new GeoPos[0];
         }
 
+        // Result [ 5 ]
         GeoPos[] result = new GeoPos[geoPositions.length];
 
         List<GeoPos> remainingPositions = new ArrayList<>(List.of(geoPositions));
@@ -40,6 +43,7 @@ public class Main {
 
         while (!remainingPositions.isEmpty()) {
             double minDistance = Double.MAX_VALUE;
+
             GeoPos nearestPos = null;
             int nearestIndex = -1;
 
@@ -48,15 +52,15 @@ public class Main {
                 double distance = GeoCalculator.getDistance(currentPos, pos);
 
                 if (distance < minDistance) {
-                    minDistance = distance;
-                    nearestPos = pos;
                     nearestIndex = i;
+                    nearestPos = pos;
+                    minDistance = distance;
                 }
             }
 
             if (nearestPos != null) {
-                result[index++] = nearestPos;
                 currentPos = nearestPos;
+                result[index++] = nearestPos;
                 remainingPositions.remove(nearestIndex);
             }
         }
