@@ -1,68 +1,55 @@
 package aufgabe6;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-
         GeoPos[] positions = {
-                new GeoPos(48.137154, 11.576124, 500),  // München
-                new GeoPos(52.520008, 13.404954, 50),    // Berlin
-                new GeoPos(50.937531, 6.960279, 60),     // Köln
-                new GeoPos(53.551086, 9.993682, 20),     // Hamburg
-                new GeoPos(51.227741, 6.773456, 45)      // Düsseldorf
+                new GeoPos("München",48.137154, 11.576124, 500),  // München
+                new GeoPos("Berlin",52.520008, 13.404954, 50),    // Berlin
+                new GeoPos("Köln",50.937531, 6.960279, 60),     // Köln
+                new GeoPos("hamburg",53.551086, 9.993682, 20),     // Hamburg
+                new GeoPos("Düsseldorf",51.227741, 6.773456, 45)      // Düsseldorf
         };
 
-        System.out.println("Ursprüngliche Route:");
-        printPositions(positions);
-
         GeoPos[] optimizedRoute = calculateFlight(positions);
-
-        System.out.println("\nOptimierte Flugroute:");
-        printPositions(optimizedRoute);
-    }
+}
 
     public static GeoPos[] calculateFlight(GeoPos[] geoPositions) {
-
-        // GeoPos [ 0, 1, 2, 3, 4 ]
         if (geoPositions == null || geoPositions.length == 0) {
             return new GeoPos[0];
         }
 
-        // Result [ 5 ]
         GeoPos[] result = new GeoPos[geoPositions.length];
+        List<GeoPos> remainingPositions = new LinkedList<>(List.of(geoPositions));
 
-        List<GeoPos> remainingPositions = new ArrayList<>(List.of(geoPositions));
-
-        GeoPos currentPos = remainingPositions.getFirst();
+        GeoPos currentPos = remainingPositions.removeFirst();
         result[0] = currentPos;
-        remainingPositions.removeFirst();
 
         int index = 1;
 
         while (!remainingPositions.isEmpty()) {
             double minDistance = Double.MAX_VALUE;
-
-            GeoPos nearestPos = null;
-            int nearestIndex = -1;
+            int nearestIndex = 0;
 
             for (int i = 0; i < remainingPositions.size(); i++) {
-                GeoPos pos = remainingPositions.get(i);
-                double distance = GeoCalculator.getDistance(currentPos, pos);
+                double distance = GeoCalculator.getDistance(currentPos, remainingPositions.get(i));
+                double distanceKm = distance / 1000;
+
+                System.out.printf("Entfernung zwischen %s und %s: %.2f km%n", currentPos.getName(), remainingPositions.get(i).getName(), distanceKm);
 
                 if (distance < minDistance) {
                     nearestIndex = i;
-                    nearestPos = pos;
                     minDistance = distance;
                 }
+
             }
 
-            if (nearestPos != null) {
-                currentPos = nearestPos;
-                result[index++] = nearestPos;
-                remainingPositions.remove(nearestIndex);
-            }
+            currentPos = remainingPositions.remove(nearestIndex);
+            result[index++] = currentPos;
+
+            System.out.println("\n");
         }
 
         return result;
@@ -76,23 +63,25 @@ public class Main {
     }
 }
 
-class GeoPos {
-    private double latitude;
-    private double longitude;
-    private double altitude;
+final class GeoPos {
+    private final String name;
+    private final double latitude;
+    private final double longitude;
+    private final double altitude;
 
-    public GeoPos(double latitude, double longitude, double altitude) {
+    public GeoPos(String name, double latitude, double longitude, double altitude) {
+        this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.altitude = altitude;
     }
 
+    public String getName() {
+        return name;
+    }
     public double getLatitude() { return latitude; }
-    public void setLatitude(double latitude) { this.latitude = latitude; }
     public double getLongitude() { return longitude; }
-    public void setLongitude(double longitude) { this.longitude = longitude; }
     public double getAltitude() { return altitude; }
-    public void setAltitude(double altitude) { this.altitude = altitude; }
 }
 
 class GeoCalculator {
