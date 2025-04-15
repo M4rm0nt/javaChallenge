@@ -2,6 +2,7 @@ package aufgabe7;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class Main {
@@ -55,35 +56,37 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Tageskurs[] kurse = new Tageskurs[3];
-        kurse[0] = new Tageskurs(new Date(), 110, 15000, 0.00300, 0.0500);
-        kurse[1] = new Tageskurs(new Date(), 105, 15100, 0.00500, 0.0067);
-        kurse[2] = new Tageskurs(new Date(), 100, 14900, 0.00476, -0.0132);
 
-        Function<Tageskurs, Function<Tageskurs, Integer>> vergleicheAktienkurs =
-                a -> b -> Double.compare(a.getAktienkurs(), b.getAktienkurs());
+        Tageskurs[] kurse = new Tageskurs[] {
+                new Tageskurs(new Date(), 110.0, 15000.0, 0.00300, 0.0500),  // Aktie +0.3%, DAX +5.0% → nicht besser
+                new Tageskurs(new Date(), 105.0, 15100.0, 0.00500, 0.0067),  // Aktie +0.5%, DAX +0.67% → nicht besser
+                new Tageskurs(new Date(), 100.0, 14900.0, 0.00476, -0.0132), // Aktie +0.476%, DAX -1.32% → besser
+                new Tageskurs(new Date(), 102.0, 14800.0, 0.02000, 0.0100),  // Aktie +2.0%, DAX +1.0% → besser
+                new Tageskurs(new Date(), 101.0, 14950.0, -0.00980, -0.0200) // Aktie -0.98%, DAX -2.0% → besser (weil weniger negativ)
+        };
 
-        sort(kurse, vergleicheAktienkurs);
+        BiFunction<Tageskurs, Tageskurs, Integer> vergleiche =
+                (a, b) -> Double.compare(a.getAktienkurs(), b.getAktienkurs());
+
+        sort(kurse, vergleiche);
 
         for (Tageskurs kurs : kurse) {
             System.out.println(kurs.getAktienkurs());
         }
     }
 
-    public static void sort(Tageskurs[] kurse, Function<Tageskurs, Function<Tageskurs, Integer>> vergleiche) {
+    public static void sort(Tageskurs[] kurse, BiFunction<Tageskurs, Tageskurs, Integer> vergleiche) {
 
         for (int i = 1; i < kurse.length; i++) {
-
             Tageskurs current = kurse[i];
             int j = i - 1;
 
-            while (j >= 0 && vergleiche.apply(kurse[j]).apply(current) > 0) {
+            while (j >= 0 && vergleiche.apply(kurse[j], current) > 0) {
                 kurse[j + 1] = kurse[j];
                 j--;
             }
-
             kurse[j + 1] = current;
         }
-
     }
+
 }
