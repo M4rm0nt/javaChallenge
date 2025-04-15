@@ -58,17 +58,16 @@ public class Main {
     public static void main(String[] args) {
 
         Tageskurs[] kurse = new Tageskurs[] {
-                new Tageskurs(new Date(), 110.0, 15000.0, 0.00300, 0.0500),  // Aktie +0.3%, DAX +5.0% → nicht besser
-                new Tageskurs(new Date(), 105.0, 15100.0, 0.00500, 0.0067),  // Aktie +0.5%, DAX +0.67% → nicht besser
-                new Tageskurs(new Date(), 100.0, 14900.0, 0.00476, -0.0132), // Aktie +0.476%, DAX -1.32% → besser
-                new Tageskurs(new Date(), 102.0, 14800.0, 0.02000, 0.0100),  // Aktie +2.0%, DAX +1.0% → besser
-                new Tageskurs(new Date(), 101.0, 14950.0, -0.00980, -0.0200) // Aktie -0.98%, DAX -2.0% → besser (weil weniger negativ)
+                new Tageskurs(new Date(), 110.0, 15000.0, 0.00300, 0.0500),
+                new Tageskurs(new Date(), 105.0, 15100.0, 0.00500, 0.0067),
+                new Tageskurs(new Date(), 102.0, 14800.0, 0.02000, 0.0100),
+                new Tageskurs(new Date(), 101.0, 14950.0, -0.00980, -0.0200),
+                new Tageskurs(new Date(), 100.0, 14900.0, 0.00476, -0.0132),
         };
 
-        BiFunction<Tageskurs, Tageskurs, Integer> vergleiche =
-                (a, b) -> Double.compare(a.getAktienkurs(), b.getAktienkurs());
+        BiFunction<Tageskurs, Tageskurs, Integer> compare = (a, b) -> Double.compare(a.getAktienkurs(), b.getAktienkurs());
 
-        sort(kurse, vergleiche);
+        sort(kurse, compare);
 
         for (Tageskurs kurs : kurse) {
             System.out.println(kurs.getAktienkurs());
@@ -87,6 +86,7 @@ public class Main {
             }
             kurse[j + 1] = current;
         }
+
     }
 
 }
