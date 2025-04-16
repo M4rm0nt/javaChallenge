@@ -6,30 +6,26 @@ import java.util.Date;
 
 public class Main {
 
-    static class Abfahrtszeit {
-        private Date datum;
-        private Integer haltestellenNr;
-        private Integer planAbfahrt;
-        private Integer istAbfahrt;
-
-        public Abfahrtszeit(Date datum, Integer haltestellenNr, Integer planAbfahrt, Integer istAbfahrt) {
-            this.datum = datum;
-            this.haltestellenNr = haltestellenNr;
-            this.planAbfahrt = planAbfahrt;
-            this.istAbfahrt = istAbfahrt;
-        }
-
-        public Integer getPlanAbfahrt() {
-            return planAbfahrt;
-        }
-
-        public Integer getIstAbfahrt() {
-            return istAbfahrt;
-        }
-    }
+    record Abfahrtszeit(Date datum, Integer halteStellenNr, Integer planAbfahrt, Integer istAbfahrt) {}
 
     public static void main(String[] args) {
+        System.out.println(Arrays.toString(ermittle_Fahrzeiten(createObject())));
+    }
 
+    public static Integer[] ermittle_Fahrzeiten(Abfahrtszeit[] zeiten) {
+        Integer[] result = new Integer[zeiten.length];
+        for (int i = 0; i <= zeiten.length - 1; i++) {
+            int diff = zeiten[i].istAbfahrt() - zeiten[i].planAbfahrt;
+            if (diff > 2) {
+                result[i] = 1;
+            } else {
+                result[i] = 0;
+            }
+        }
+        return result;
+    }
+
+    public static Abfahrtszeit[] createObject() {
         Abfahrtszeit[] abfahrtszeiten = new Abfahrtszeit[15];
         abfahrtszeiten[0] = new Abfahrtszeit(new Date(2024, Calendar.OCTOBER, 1), 0, 480, 483);
         abfahrtszeiten[1] = new Abfahrtszeit(new Date(2024, Calendar.OCTOBER, 1), 1, 485, 487);
@@ -46,21 +42,6 @@ public class Main {
         abfahrtszeiten[12] = new Abfahrtszeit(new Date(2024, Calendar.OCTOBER, 1), 12, 540, 540);
         abfahrtszeiten[13] = new Abfahrtszeit(new Date(2024, Calendar.OCTOBER, 1), 13, 545, 548);
         abfahrtszeiten[14] = new Abfahrtszeit(new Date(2024, Calendar.OCTOBER, 1), 14, 550, 550);
-
-        System.out.println(Arrays.toString(ermittle_Fahrzeiten(abfahrtszeiten)));
-
-    }
-
-    public static Integer[] ermittle_Fahrzeiten(Abfahrtszeit[] zeiten) {
-        Integer[] result = new Integer[15];
-        for (int i = 0; i <= zeiten.length - 1; i++) {
-            int diff = zeiten[i].getIstAbfahrt() - zeiten[i].getPlanAbfahrt();
-            if (diff > 2) {
-                result[i] = 1;
-            } else {
-                result[i] = 0;
-            }
-        }
-        return result;
+        return abfahrtszeiten;
     }
 }
